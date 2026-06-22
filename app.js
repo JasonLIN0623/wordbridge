@@ -1,119 +1,12 @@
 const STORAGE_KEY = "wordbridge-progress-v3";
 
-const englishLessons = [
-  {
-    word: "unpredictable",
-    phonetic: "/ˌʌn.prɪˈdɪk.tə.bəl/",
-    meaning: "無法預測的",
-    parts: [
-      { type: "字首 PREFIX", value: "un-", meaning: "不、相反" },
-      { type: "字根 ROOT", value: "predict", meaning: "預測" },
-      { type: "字尾 SUFFIX", value: "-able", meaning: "可以…的" },
-    ],
-    explanation: "un（不）＋ predict（預測）＋ able（可以…的），合起來就是「無法被預測的」。",
-    example: "The weather here is completely unpredictable.",
-    translation: "這裡的天氣完全無法預測。",
-  },
-  {
-    word: "transportation",
-    phonetic: "/ˌtræn.spɔːrˈteɪ.ʃən/",
-    meaning: "運輸；交通",
-    parts: [
-      { type: "字首 PREFIX", value: "trans-", meaning: "跨越、通過" },
-      { type: "字根 ROOT", value: "port", meaning: "攜帶、運送" },
-      { type: "字尾 SUFFIX", value: "-ation", meaning: "行為或結果" },
-    ],
-    explanation: "trans（跨越）＋ port（運送）＋ ation（行為），表示把人或物運送到另一處。",
-    example: "Public transportation is convenient in this city.",
-    translation: "這座城市的大眾運輸很方便。",
-  },
-  {
-    word: "misunderstanding",
-    phonetic: "/ˌmɪs.ʌn.dɚˈstæn.dɪŋ/",
-    meaning: "誤解",
-    parts: [
-      { type: "字首 PREFIX", value: "mis-", meaning: "錯誤地" },
-      { type: "字根 ROOT", value: "understand", meaning: "理解" },
-      { type: "字尾 SUFFIX", value: "-ing", meaning: "行為或狀態" },
-    ],
-    explanation: "mis（錯誤）＋ understand（理解）＋ ing（狀態），就是「理解錯誤的狀態」。",
-    example: "It was just a small misunderstanding.",
-    translation: "那只是一個小誤會。",
-  },
-  {
-    word: "international",
-    phonetic: "/ˌɪn.tɚˈnæʃ.ən.əl/",
-    meaning: "國際的",
-    parts: [
-      { type: "字首 PREFIX", value: "inter-", meaning: "在…之間" },
-      { type: "字根 ROOT", value: "nation", meaning: "國家" },
-      { type: "字尾 SUFFIX", value: "-al", meaning: "與…有關的" },
-    ],
-    explanation: "inter（在…之間）＋ nation（國家）＋ al（相關的），表示「國家之間的」。",
-    example: "She works for an international company.",
-    translation: "她在一家國際公司工作。",
-  },
-];
+const lessonData = window.WordBridgeData || {};
+const englishLessons = lessonData.englishLessons || [];
+const japaneseLessons = lessonData.japaneseLessons || [];
 
-const japaneseLessons = [
-  {
-    level: "N5 基礎文法",
-    title: "表達喜好",
-    pattern: "～が好きです",
-    note: "用來表達「喜歡某個人、事、物」。助詞「が」前面放喜歡的對象，句尾用「好きです」保持禮貌。",
-    phrases: [
-      {
-        japanese: "私は日本の音楽が好きです。",
-        reading: "わたしは にほんの おんがくが すきです。",
-        translation: "我喜歡日本音樂。",
-      },
-      {
-        japanese: "どんな食べ物が好きですか。",
-        reading: "どんな たべものが すきですか。",
-        translation: "你喜歡什麼樣的食物？",
-      },
-    ],
-    tip: "日文的「好き」雖然翻成喜歡，但文法上接近形容詞，所以不用加「を」。",
-  },
-  {
-    level: "N5 基礎文法",
-    title: "提出邀請",
-    pattern: "～ませんか",
-    note: "把動詞ます形改成「ませんか」，就能禮貌地邀請對方一起做某件事，語氣相當於「要不要一起…？」。",
-    phrases: [
-      {
-        japanese: "一緒に映画を見ませんか。",
-        reading: "いっしょに えいがを みませんか。",
-        translation: "要不要一起看電影？",
-      },
-      {
-        japanese: "週末、コーヒーを飲みませんか。",
-        reading: "しゅうまつ、コーヒーを のみませんか。",
-        translation: "週末要不要一起喝咖啡？",
-      },
-    ],
-    tip: "回答邀請時可說「いいですね」（好啊）；若要婉拒，可說「すみません、ちょっと…」。",
-  },
-  {
-    level: "情境常用句",
-    title: "在餐廳點餐",
-    pattern: "～をお願いします",
-    note: "在店家或餐廳指定想要的東西時，可以用「名詞＋をお願いします」，是簡單又自然的禮貌說法。",
-    phrases: [
-      {
-        japanese: "このラーメンをお願いします。",
-        reading: "この ラーメンを おねがいします。",
-        translation: "請給我這碗拉麵。",
-      },
-      {
-        japanese: "お水をもう一つお願いします。",
-        reading: "おみずを もうひとつ おねがいします。",
-        translation: "請再給我一杯水。",
-      },
-    ],
-    tip: "指菜單時搭配「これ」（這個）也可以直接說「これをお願いします」。",
-  },
-];
+if (englishLessons.length === 0 || japaneseLessons.length === 0) {
+  throw new Error("課程資料載入失敗，請確認 data 資料夾內的檔案是否完整。");
+}
 
 const quizQuestions = [
   {
@@ -453,6 +346,7 @@ function renderEnglishLesson() {
           <span class="phonetic">${lesson.phonetic}</span>
         </div>
         <p class="definition">${lesson.meaning}</p>
+        <span class="grammar-tag">${lesson.level}</span>
 
         <div class="word-parts">
           ${lesson.parts
